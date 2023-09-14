@@ -12,8 +12,7 @@ func main() {
 		fmt.Println("Error generating private key:", err)
 		return
 	}
-	identifier := base58.Encode(publicKey)
-	did := PeerDID{DID, DID_METHOD_NAME, TRANSFORMER, 0, identifier}
+	did := NewPeerDID(publicKey)
 	fmt.Println(did.getDid())
 }
 
@@ -29,6 +28,11 @@ type PeerDID struct {
 	identifier string
 }
 
+func NewPeerDID(publicKey []byte) *PeerDID {
+	identifier := base58.Encode(publicKey)
+	return &PeerDID{DID, DID_METHOD_NAME, TRANSFORMER, 0, identifier}
+}
+
 func (peerDid PeerDID) getDid() string {
-	return fmt.Sprintf("%s:%s:%d:%s%s", peerDid.scheme, peerDid.method, peerDid.numAlgo, string(peerDid.transform), peerDid.identifier)
+	return fmt.Sprintf("%s:%s:%d%s%s", peerDid.scheme, peerDid.method, peerDid.numAlgo, string(peerDid.transform), peerDid.identifier)
 }
